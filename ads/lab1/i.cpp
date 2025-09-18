@@ -1,37 +1,35 @@
 #include <iostream>
-#include <stack>
+#include <queue>
 
 using namespace std;
 
 int main() {
-    int n, K = 0, S = 0;
-    char cur;
-    cin >> n;
 
+    int n;
+    cin >> n;
     string s;
     cin >> s;
+
+    queue<int> qS, qK;
     
-    for (int i = n-1; i >= 0; i--) {
-        cur = s[i];
-        if (cur == 'K') {
-            K++;
-            if (S > 0) {
-                S--;
-            }
-        }
-        else {
-            S++;
-            if (K > 0) {
-                K--;
-            }
+    for (int i = 0; i < n; ++i) {
+        if (s[i] == 'S') qS.push(i);
+        else qK.push(i);
+    }
+
+    while (!qS.empty() && !qK.empty()) {
+        int iS = qS.front();
+        qS.pop();
+        int iK = qK.front();
+        qK.pop();
+        if (iS < iK) {
+            qS.push(iS + n);
+        } else {
+            qK.push(iK + n);
         }
     }
 
-    if (K > S) {
-        cout << "KATSURAGI";
-    }
-    else {
-        cout << "SAKAYANAGI";
-    }
+    if (!qS.empty()) cout << "SAKAYANAGI\n";
+    else cout << "KATSURAGI\n";
     return 0;
 }
