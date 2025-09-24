@@ -170,20 +170,6 @@
 			"height":80
 		},
 		{
-			"id":"2d6fc792cd551c1c",
-			"type":"text",
-			"text":"Notes",
-			"styleAttributes":{
-				"shape":"pill",
-				"textAlign":"center",
-				"border":null
-			},
-			"x":890,
-			"y":840,
-			"width":220,
-			"height":60
-		},
-		{
 			"id":"d1fd2735f1e63b46",
 			"type":"text",
 			"text":"DoctorID",
@@ -236,6 +222,20 @@
 			},
 			"x":20,
 			"y":-420,
+			"width":220,
+			"height":60
+		},
+		{
+			"id":"2d6fc792cd551c1c",
+			"type":"text",
+			"text":"Notes",
+			"styleAttributes":{
+				"shape":"pill",
+				"textAlign":"center",
+				"border":null
+			},
+			"x":890,
+			"y":840,
 			"width":220,
 			"height":60
 		},
