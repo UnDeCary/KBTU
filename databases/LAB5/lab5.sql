@@ -1,7 +1,7 @@
 -- ============================================= Part 1: Check Constraints =============================================
 
 -- Task 1.1
-
+/home/zlup/projects
 CREATE TABLE employees (
     employee_id int,
     first_name text,
@@ -328,3 +328,103 @@ CREATE TABLE order_details (
     quantity int not null check(quantity > 0),
     unit_price int not null check(unit_price > 0)
 );
+
+
+-- In-Class Practice
+
+-- Task 1
+
+CREATE TABLE categories (
+    category_id int primary key,
+    category_name text not null unique,
+    description text,
+    is_active bool not null default true
+);
+
+CREATE TABLE instructors (
+    instructor_id int primary key,
+    username text not null unique,
+    email text not null unique,
+    full_name text not null,
+    bio text,
+    hourly_rate numeric check (hourly_rate between 15 and 500),
+    rating numeric check (rating between 0.0 and 5.0),
+    total_students int not null default 0 check (total_students >= 0),
+    joined_date date not null default NOW(),
+);
+
+INSERT INTO categories
+VALUES (1, 'Programming'),
+       (2, 'Design'),
+       (3, 'Business');
+
+INSERT INTO instructors
+VALUES
+    (1, 'j_smith', 'j_smith@shop.com', 'John Smith', null, 400, 4.2, 15),
+    (2, 's_black', 's_black@shop.com', 'Sam Black', null, 330, 3.8, 12),
+    (3, 'w_white', 'w_white@shop.com', 'Walter White', null, 420, 4.9, 20);
+
+
+INSERT INTO instructors
+VALUES (4, 'b_con', 'b_con@shop.com', 'Bob Con', null , 490, 6.0, 12);
+
+INSERT INTO instructors
+VALUES (4, 's_black', 'b_con@shop.com', 'Bob Con', null , 490, 3.0, 12);
+
+
+INSERT INTO instructors
+VALUES (4, 'b_con', 'b_con@shop.com', 'Bob Con', null , 10, 3.0, 12);
+
+-- Task 2
+
+CREATE TABLE courses (
+    course_id int primary key,
+    course_title text not null,
+    instructor_id int not null references instructors on delete restrict,
+    category_id int not null references categories on delete restrict,
+    description text not null,
+    level text not null check (level in ('beginner', 'intermediate', 'advanced', 'expert')),
+    regular_price numeric not null check (regular_price between 9.99 and 999.99),
+    sale_price numeric check (sale_price is null or (sale_price < regular_price and sale_price >= 0)),
+    duration_hours numeric not null check (duration_hours between 0.5 and 200),
+    max_students int check (max_students is null or max_students between 10 and 1000),
+    enrollment_count int not null default false,
+    is_published bool not null default false,
+    create_date date not null default NOW(),
+    constraint unique_pair unique (course_id, instructor_id)
+);
+
+
+
+-- Task 3
+
+CREATE TABLE students (
+    student_id int primary key,
+    username text not null unique,
+    email text not null unique,
+    full_name text not null,
+    date_of_birth date not null,
+    registration_date date not null default NOW(),
+    account_balance numeric not null default 0,
+    total_courses_completed int not null default 0 check (total_courses_completed >= 0),
+    subscription_type text not null default 'free' check (subscription_type in ('free', 'monthly', 'annual', 'lifetime')),
+
+    constraint more_than_13_yo check (EXTRACT(YEAR FROM AGE(NOW(), date_of_birth)) > 13),
+    constraint registration_not_in_future check ( registration_date < NOW() )
+);
+
+
+-- Task 4
+
+CREATE TABLE enrollments (
+    student_id int references students on delete cascade,
+    course_id int references courses on delete restrict,
+    enrollment_date timestamp not null default NOW(),
+    price_paid numeric not null  check (price_paid >= 0),
+    progress_percentage numeric not null default 0 check (progress_percentage between 0 and 100),
+    status text not null default 'active' check (status in ('active', 'completed', 'dropped', 'refunded')),
+    completion_date date,
+    certificate_isssued bool not null default false,
+    constraint pk_1 primary key (student_id, course_id),
+
+)
