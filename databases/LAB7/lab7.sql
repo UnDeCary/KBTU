@@ -57,7 +57,7 @@ CREATE VIEW project_overview AS
 SELECT project_name, budget, dept_name, location, employee_count
 FROM projects
 INNER JOIN departments USING (dept_id)
-LEFT JOIN (SELECT dept_id, count(*) as employee_count FROM employees GROUP BY dept_id) USING (dept_id);
+LEFT JOIN (SELECT dept_id, count(*) as employee_count FROM employees GROUP BY dept_id) z USING (dept_id);
 
 SELECT * FROM project_overview;
 
@@ -222,4 +222,104 @@ ALTER ROLE data_viewer CONNECTION LIMIT 5;
 -- ========================================== Part 7: Advanced Role Managment ==========================================
 
 -- Exercise 7.1: Role Hierarchies
+CREATE ROLE read_only;
+GRANT SELECT ON ALL TABLES IN SCHEMA labs TO read_only;
 
+CREATE ROLE junior_analyst PASSWORD 'junior123';
+CREATE ROLE senior_analyst PASSWORD 'senior123';
+
+GRANT read_only TO junior_analyst, senior_analyst;
+
+GRANT INSERT, UPDATE ON employees TO senior_analyst;
+
+-- Exercise 7.2: Object Ownership
+CREATE ROLE project_manager LOGIN PASSWORD 'pm123';
+ALTER TABLE dept_statistics OWNER TO project_manager;
+ALTER TABLE projects OWNER TO project_manager;
+
+SELECT tablename, tableowner
+FROM pg_tables
+WHERE schemaname = 'labs';
+
+-- Exercise 7.3: Reassign and Drop Roles
+CREATE ROLE temp_owner LOGIN;
+CREATE TABLE temp_table (
+    id int
+);
+ALTER TABLE temp_table OWNER TO temp_owner;
+REASSIGN OWNED BY temp_owner TO postgres;
+DROP OWNED BY temp_owner;
+DROP ROLE temp_owner;
+
+-- Exercise 7.4: Row-Level Security with Views
+CREATE VIEW hr_employee_view AS
+    SELECT * FROM employees WHERE dept_id = 102;
+GRANT SELECT ON hr_employee_view TO hr_team;
+
+CREATE VIEW finance_employee_view AS
+    SELECT emp_id, emp_name, salary FROM employees;
+GRANT SELECT ON finance_employee_view TO finance_team;
+
+
+-- ============================================ Part 8: Practical Scenarios ============================================
+
+-- Exercise 8.1: Department Dashboard View
+CREATE OR REPLACE VIEW dept_dashboard AS
+    SELECT
+        dept_id,
+        location,
+        employee_count,
+        avg_salary,
+        number_of_projects,
+        total_project_budget,
+        (total_project_budget/coalesce(employee_count, 1)) AS budget_per_employee
+    FROM departments
+    LEFT JOIN dept_statistics USING (dept_name)
+    LEFT JOIN dept_summary_mv USING (dept_id);
+
+SELECT * FROM dept_dashboard;
+
+
+-- Exercise 8.2: Audit View
+ALTER TABLE projects ADD COLUMN created_date TIMESTAMP DEFAULT NOW();
+
+CREATE OR REPLACE VIEW high_budget_projects AS
+    SELECT
+        project_name,
+        budget,
+        dept_name,
+        created_date,
+        CASE
+            WHEN budget > 150000 THEN 'Critical Review Required'
+            WHEN budget > 100000 THEN 'Managment Approval Needed'
+            ELSE 'Standard Process'
+        END AS approval_status
+    FROM projects
+    LEFT JOIN departments USING (dept_id)
+    WHERE budget > 75000;
+
+SELECT * FROM high_budget_projects;
+
+-- Exercise 8.3: Create Access Control System
+CREATE ROLE viewer_role;
+GRANT SELECT ON ALL TABLES IN SCHEMA labs TO viewer_role;
+
+CREATE ROLE entry_role;
+GRANT viewer_role TO entry_role;
+GRANT INSERT ON employees, projects TO entry_role;
+
+CREATE ROLE analyst_role;
+GRANT entry_role TO analyst_role;
+GRANT UPDATE ON employees, projects TO analyst_role;
+
+CREATE ROLE manager_role;
+GRANT analyst_role TO manager_role;
+GRANT DELETE ON employees, projects TO manager_role;
+
+CREATE USER alice PASSWORD 'alice123';
+CREATE USER bob PASSWORD 'bob123';
+CREATE USER charlie PASSWORD 'charlie123';
+
+GRANT viewer_role TO alice;
+GRANT analyst_role TO bob;
+GRANT manager_role TO charlie;
