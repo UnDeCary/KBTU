@@ -206,3 +206,53 @@ FROM departments d
 INNER JOIN employees e USING (dept_id)
 GROUP BY d.dept_name
 HAVING AVG(e.salary) > 50000;
+
+
+-- ================================================== In-Class Tasks ===================================================
+
+-- q1
+
+SELECT e.emp_name,
+       CASE
+           WHEN d.location IS NULL THEN 'Not Assigned'
+           WHEN d.location IS NOT NULL THEN d.location
+       END as building
+FROM employees e
+LEFT JOIN departments d USING (dept_id)
+ORDER BY e.emp_name;
+
+-- q2
+
+select d.dept_name, e.cnt_e AS employee_count, p.p_cnt as project_count, z.r_cnt as resources_count
+FROM departments d
+LEFT JOIN (SELECT dept_id, count(emp_name) as cnt_e FROM employees GROUP BY  dept_id) e USING (dept_id)
+LEFT JOIN (SELECT dept_id, count(project_name) as p_cnt FROM projects GROUP BY  dept_id) p USING (dept_id)
+LEFT JOIN (SELECT em.dept_id, count(emp_name) as r_cnt FROM employees em, projects pj WHERE em.dept_id = pj.dept_id GROUP BY em.dept_id) z USING (dept_id);
+
+-- q3
+
+SELECT d.dept_name, sum(p.budget)
+FROM departments d
+LEFT JOIN projects p USING (dept_id)
+WHERE p.project_name IS NOT NULL
+GROUP BY d.dept_name;
+
+-- q4
+
+SELECT e.emp_name, d.dept_name, e.salary, a.avg_salary, (e.salary-a.avg_salary) as comarison
+FROM employees e
+LEFT JOIN departments d USING (dept_id)
+LEFT JOIN (SELECT dept_id, avg(salary) as avg_salary FROM employees GROUP BY dept_id) AS a USING (dept_id);
+
+-- q5
+
+SELECT 'Employee' as resource_type, e.emp_name as resource_name, e.salary as value, 'No Department Assigned' as status
+FROM employees e
+LEFT JOIN departments d USING (dept_id)
+WHERE d.dept_id IS NULL
+UNION (
+    SELECT 'Project' as resource_type, p.project_name as resource_name, p.budget as value, 'No Department Assigned' as status
+    FROM projects p
+    LEFT JOIN departments d USING (dept_id)
+    WHERE d.dept_id IS NULL
+);
