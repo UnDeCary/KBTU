@@ -323,3 +323,124 @@ CREATE USER charlie PASSWORD 'charlie123';
 GRANT viewer_role TO alice;
 GRANT analyst_role TO bob;
 GRANT manager_role TO charlie;
+
+
+-- =====================================================================================================================
+-- ================================================ In-Class Assessment ================================================
+-- =====================================================================================================================
+
+-- ====================================================== Part A =======================================================
+
+-- Task 1
+CREATE VIEW employee_list AS
+SELECT emp_name, dept_name, salary, location
+FROM employees
+LEFT JOIN departments using (dept_id)
+WHERE dept_id IS NOT NULL
+ORDER BY dept_name, salary DESC;
+
+SELECT * FROM employee_list;
+
+
+-- Task 2
+CREATE VIEW  project_details AS
+SELECT
+    project_name,
+    budget,
+    dept_name,
+    CASE
+        WHEN budget >= 80000 THEN 'High Budget'
+        ELSE 'Low Budget'
+    END as budget_level
+FROM projects
+LEFT JOIN departments USING (dept_id)
+WHERE dept_id IS NOT NULL;
+
+SELECT * FROM project_details WHERE budget_level = 'High Budget';
+
+
+-- ====================================================== Part B =======================================================
+
+-- Task 3
+-- Step 1
+CREATE MATERIALIZED VIEW dept_report AS
+SELECT
+    dept_name,
+    location,
+    coalesce(emp_count, 0) as emp_count,
+    coalesce(proj_count, 0) as proj_count
+FROM departments
+LEFT JOIN (SELECT dept_id, count(*) as emp_count FROM employees GROUP BY dept_id) a USING (dept_id)
+LEFT JOIN (SELECT dept_id, count(*) as proj_count FROM projects GROUP BY dept_id) b USING (dept_id)
+WITH DATA;
+
+-- Step 2
+SELECT * FROM dept_report ORDER BY dept_name;
+
+INSERT INTO employees (emp_id, emp_name, dept_id, salary)
+VALUES (12, 'Lisa Chen', 101, 56000);
+
+SELECT * FROM dept_report WHERE dept_name = 'IT';
+
+REFRESH MATERIALIZED VIEW dept_report;
+
+
+-- ====================================================== Part C =======================================================
+
+-- Task 4
+-- Step 1
+CREATE ROLE basic_viewer NOLOGIN;
+GRANT SELECT ON employee_list, departments TO basic_viewer;
+CREATE ROLE project_viewer NOLOGIN;
+GRANT SELECT ON project_details, projects TO project_viewer;
+
+-- Step 2
+CREATE USER anna PASSWORD 'anna2024';
+GRANT basic_viewer TO anna;
+CREATE USER bob PASSWORD 'bob2024';
+GRANT project_viewer TO bob;
+
+-- Step 3
+CREATE ROLE admin_role LOGIN PASSWORD 'admin2024';
+GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA labs TO admin_role;
+
+SELECT rolname, rolcanlogin
+FROM pg_roles
+WHERE rolname IN ('basic_viewer', 'project_viewer', 'admin_role', 'anna', 'bob');
+
+-- ====================================================== Part D =======================================================
+
+-- Task 5
+-- Step 1
+CREATE OR REPLACE VIEW employee_list AS
+SELECT
+    emp_name,
+    dept_name,
+    salary,
+    location,
+    CASE
+        WHEN salary > 55000 THEN 'High'
+        ELSE 'Standard'
+    END AS salary_category
+FROM employees
+         LEFT JOIN departments using (dept_id)
+WHERE dept_id IS NOT NULL
+ORDER BY dept_name, salary DESC;
+
+-- Step 2
+ALTER VIEW project_details RENAME TO project_info;
+CREATE VIEW test_view AS
+SELECT * FROM departments WHERE dept_id = '101';
+DROP VIEW test_view;
+
+-- ====================================================== Part E =======================================================
+
+-- Task 6
+-- Step 1
+CREATE ROLE team_lead NOLOGIN;
+GRANT basic_viewer, project_viewer TO team_lead;
+GRANT INSERT ON employees TO team_lead;
+
+-- Step 2
+CREATE USER charlie PASSWORD 'charlie2024';
+GRANT team_lead TO charlie;
