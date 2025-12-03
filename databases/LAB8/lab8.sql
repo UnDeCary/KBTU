@@ -208,3 +208,73 @@ WHERE schemaname = 'labs'
 AND indexname LIKE '%salary%';
 
 SELECT * FROM index_documentation;
+
+-- =====================================================================================================================
+-- =================================================== In-Class Task ===================================================
+-- =====================================================================================================================
+
+-- ================================================== Database Setup ===================================================
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY,
+    rst_name VARCHAR(50),
+    last_name VARCHAR(50),
+    phone VARCHAR(20),
+    account_number VARCHAR(20),
+    branch_code VARCHAR(10)
+);
+CREATE TABLE accounts (
+    account_id INT PRIMARY KEY,
+    customer_id INT,
+    account_type VARCHAR(20),
+    balance DECIMAL(15,2),
+    status VARCHAR(20),
+    opened_date DATE,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+);
+CREATE TABLE transactions (
+    transaction_id INT PRIMARY KEY,
+    account_id INT,
+    transaction_type VARCHAR(20),
+    amount DECIMAL(15,2),
+    transaction_date TIMESTAMP,
+    description VARCHAR(200),
+    FOREIGN KEY (account_id) REFERENCES accounts(account_id)
+);
+
+-- ====================================== Task 1: Unique Constraint for Security =======================================
+
+CREATE UNIQUE INDEX account_number_idx ON customers(account_number);
+
+-- Q: What happens if someone tries to insert a duplicate account number?
+-- A: It will raise an error
+
+-- ====================================== Task 2: Transaction History Performance ======================================
+
+SELECT transaction_type, amount, transaction_date, description
+FROM transactions
+WHERE account_id = 45678
+  AND transaction_date >= CURRENT_DATE - INTERVAL '90 days'
+ORDER BY transaction_date DESC;
+
+CREATE INDEX transactions_idx ON transactions(account_id, transaction_date desc);
+
+-- Q: List the columns in your index in order
+-- A: account_id, transaction_date
+
+-- =========================================== Task 3: Active Accounts Only ============================================
+
+CREATE INDEX is_active_idx ON accounts(status);
+
+-- Q_A: Is this a partial index?
+-- A_A: No
+
+-- Q_B: Why would a partial index NOT be beneficial in this case:
+-- A_B: Because ~95% is Active, so it will spend calculation power for useless operation
+
+-- ======================================= Task 4: Customer Lookup Optimization ========================================
+
+CREATE INDEX last_name_idx ON customers(lower(last_name));
+
+-- Q: What type of index is this?
+-- A: Expression index
+

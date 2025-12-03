@@ -6,7 +6,7 @@
 using namespace std;
 
 int islands(unordered_map<int, vector<int>>& al) {
-    unordered_map<int, bool> v;
+    unordered_map<int, bool> v;y
     queue<int> q;
     int sum_of_islands = 0;
 
