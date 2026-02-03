@@ -290,5 +290,88 @@ SELECT MIN(price) FROM products;
 
 COMMIT;
 
+-- =====================================================================================================================
+-- =================================================== In-Class Task ===================================================
+-- =====================================================================================================================
+
+-- Database setup
+
+CREATE TABLE inventory (
+  id serial primary key ,
+  product varchar(20),
+  quantity int,
+  warehouse varchar(20)
+);
+
+CREATE TABLE bank_accounts(
+    id serial primary key,
+    owner varchar(20),
+    balance float
+);
+
+INSERT INTO inventory VALUES
+      ('Laptop', 50, 'Main'),
+      ('Mouse', 200, 'Main'),
+      ('Keyboard', 150, 'Main');
+
+INSERT INTO bank_accounts VALUES
+    ('Alex', 2000.00),
+    ('Diana', 3500.00),
+    ('Michael', 1500.00);
 
 
+-- ====================================================== Task 1 =======================================================
+
+BEGIN; -- A 2000 D 3500 M 1500
+-- STEP 1
+UPDATE bank_accounts SET balance = balance - 600.00
+WHERE owner = 'Alex'; -- A 1400 D 3500 M 1500
+-- STEP 2
+SAVEPOINT transfer_started; --
+-- STEP 3
+UPDATE bank_accounts SET balance = balance + 600.00
+WHERE owner = 'Diana'; -- A 1400 D 4100 M 1500
+-- STEP 4
+SAVEPOINT transfer_completed; --
+-- STEP 5
+UPDATE bank_accounts SET balance = balance - 100.00
+WHERE owner = 'Diana'; -- A 1400 D 4000 M 1500
+-- STEP 6
+ROLLBACK TO transfer_started; -- A 1400 D 3500 M 1500
+-- STEP 7
+UPDATE bank_accounts SET balance = balance + 600.00
+WHERE owner = 'Michael'; -- A 1400 D 3500 M 2100
+-- STEP 8
+COMMIT;
+-- STEP 9
+
+-- | Step             | Alex    | Diana   | Michael |
+-- | ---------------- | ------- | ------- | ------- |
+-- | **Initial**      | 2000.00 | 3500.00 | 1500.00 |
+-- | **After Step 2** | 1400.00 | 3500.00 | 1500.00 |
+-- | **After Step 4** | 1400.00 | 4100.00 | 1500.00 |
+-- | **After Step 6** | 1400.00 | 3500.00 | 1500.00 |
+-- | **After Step 7** | 1400.00 | 3500.00 | 2100.00 |
+-- | **After Step 9** | 1400.00 | 3500.00 | 2100.00 |
+
+-- ====================================================== Task 2 =======================================================
+
+-- A: READ UNCOMMITED
+
+-- B: REPEATABLE READ
+
+-- C: SERIALIZABLE
+
+-- ====================================================== Task 3 =======================================================
+
+BEGIN;
+UPDATE inventory SET quantity = quantity - 10 WHERE product = 'Laptop';
+SAVEPOINT backupl;
+UPDATE inventory SET quantity = quantity + 10 WHERE product = 'Mouse';
+ROLLBACK TO backupl;
+COMMIT;
+
+-- ====================================================== Task 4 =======================================================
+
+-- Balance could be non-positive in the case of double-withdraw
+-- We need to use serializable isolation level to handle this properly
