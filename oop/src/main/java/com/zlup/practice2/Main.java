@@ -1,4 +1,4 @@
-package com.zlup.lab2;
+package com.zlup.practice2;
 
 public class Main {
 
