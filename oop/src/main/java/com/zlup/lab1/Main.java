@@ -9,6 +9,9 @@ import java.util.Vector;
 
 public class Main {
     public static void main(String[] args) {
+
+        // TASK 2
+
         Car car1 = new Car("VIN123", "Porsche 911 GT3RS", EngineType.ELECTIC);
         Car car2 = new Car("VIN456", "Ford Mustang", EngineType.PETROL);
 
@@ -23,6 +26,9 @@ public class Main {
         System.out.println("Total cars so far: " + Car.totalCars);
 
         Car.printTotalCars();
+
+
+        // TASK 4
 
         Vector<Student> students = new Vector<>();
 
@@ -50,5 +56,22 @@ public class Main {
         GradeBook gb = new GradeBook(course, gbd);
 
         gb.displayGradeReport();
+
+
+        // TASK 5
+
+        DragonLunch dragonLunch = new DragonLunch();
+
+        Person person1 = new Person(Gender.BOY);
+        Person person2 = new Person(Gender.GIRL);
+        Person person3 = new Person(Gender.BOY);
+        Person person4 = new Person(Gender.GIRL);
+
+        dragonLunch.kidnap(person1);
+        dragonLunch.kidnap(person2);
+        dragonLunch.kidnap(person3);
+        dragonLunch.kidnap(person4);
+
+        System.out.println(dragonLunch.willDragonEatOrNot() ? "Yes" : "No");
     }
 }
