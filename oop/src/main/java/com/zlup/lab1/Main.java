@@ -1,5 +1,12 @@
 package com.zlup.lab1;
 
+import com.zlup.practice2.Student;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Vector;
+
 public class Main {
     public static void main(String[] args) {
         Car car1 = new Car("VIN123", "Porsche 911 GT3RS", EngineType.ELECTIC);
@@ -16,5 +23,32 @@ public class Main {
         System.out.println("Total cars so far: " + Car.totalCars);
 
         Car.printTotalCars();
+
+        Vector<Student> students = new Vector<>();
+
+        students.add(new Student("Student A", 1));
+        students.add(new Student("Student B", 1));
+        students.add(new Student("Student C", 1));
+        students.add(new Student("Student D", 1));
+        students.add(new Student("Student E", 1));
+
+
+        Map<Student, Integer> gbd = new HashMap<>();
+
+        System.out.print("Please, input grades for students:\n\n");
+        Scanner sc = new Scanner(System.in);
+        for (Student student : students) {
+            System.out.print(student.getName() + ": ");
+            int grade = sc.nextInt();
+            gbd.put(student, grade);
+        }
+
+        sc.close();
+
+        Course course = new Course("OOP", "desc", 4, new Vector<>());
+
+        GradeBook gb = new GradeBook(course, gbd);
+
+        gb.displayGradeReport();
     }
 }

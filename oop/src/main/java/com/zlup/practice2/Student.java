@@ -2,12 +2,14 @@ package com.zlup.practice2;
 
 public class Student {
     private String name;
-    private String id;
+    private int id;
     private int yearOfStudy;
 
-    public Student(String name, String id, int yearOfStudy) {
+    private static int cnt = 0;
+
+    public Student(String name, int yearOfStudy) {
         this.name = name;
-        this.id = id;
+        this.id = ++cnt;
         this.yearOfStudy = yearOfStudy;
     }
 
@@ -15,7 +17,7 @@ public class Student {
         return name;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

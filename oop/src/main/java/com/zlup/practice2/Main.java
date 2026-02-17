@@ -4,7 +4,7 @@ public class Main {
 
     public static void main(String[] args) {
         // Task 1
-        Student student = new Student("Ilya", "24B032008", 2);
+        Student student = new Student("Ilya", 2);
 
         System.out.println("Name: " + student.getName());
         System.out.println("ID: " + student.getId());
