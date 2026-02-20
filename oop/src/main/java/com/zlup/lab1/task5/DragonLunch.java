@@ -1,4 +1,4 @@
-package com.zlup.lab1;
+package com.zlup.lab1.task5;
 
 import java.util.Vector;
 
@@ -27,5 +27,10 @@ public class DragonLunch {
         }
 
         return true;
+    }
+
+
+    public boolean willDragonEatOrNot(String arg) {
+
     }
 }

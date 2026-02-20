@@ -1,4 +1,4 @@
-package com.zlup.lab1;
+package com.zlup.lab1.task4;
 
 import java.util.Vector;
 

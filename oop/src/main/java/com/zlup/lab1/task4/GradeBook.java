@@ -1,9 +1,8 @@
-package com.zlup.lab1;
+package com.zlup.lab1.task4;
 
 import com.zlup.practice2.Student;
 
 import java.util.Map;
-import java.util.Vector;
 
 public class GradeBook {
     private final Course course;

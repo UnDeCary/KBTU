@@ -1,9 +1,4 @@
-package com.zlup.lab1;
-
-enum Gender {
-    BOY,
-    GIRL
-}
+package com.zlup.lab1.task5;
 
 public class Person {
     public final Gender gender;

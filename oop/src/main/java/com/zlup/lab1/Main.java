@@ -1,5 +1,9 @@
 package com.zlup.lab1;
 
+import com.zlup.lab1.task2.*;
+import com.zlup.lab1.task3.*;
+import com.zlup.lab1.task4.*;
+import com.zlup.lab1.task5.*;
 import com.zlup.practice2.Student;
 
 import java.util.HashMap;
@@ -26,6 +30,14 @@ public class Main {
         System.out.println("Total cars so far: " + Car.totalCars);
 
         Car.printTotalCars();
+
+        // TASK 3
+
+        Temperature temperature = new Temperature();
+        System.out.println("Temperature:");
+        System.out.println("Celsius: " + temperature.getCelsius());
+        System.out.println("Fahrenheit: " + temperature.getFahrenheit());
+        System.out.println();
 
 
         // TASK 4

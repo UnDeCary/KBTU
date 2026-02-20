@@ -1,10 +1,4 @@
-package com.zlup.lab1;
-
-enum EngineType {
-    PETROL,
-    DISEL,
-    ELECTIC
-}
+package com.zlup.lab1.task2;
 
 public class Car {
 

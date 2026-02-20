@@ -1,4 +1,4 @@
-package com.zlup.lab1;
+package com.zlup.lab1.task1;
 
 import java.util.Scanner;
 

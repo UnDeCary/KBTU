@@ -1,4 +1,4 @@
-package com.zlup.lab1;
+package com.zlup.lab1.task3;
 
 public class Temperature {
     private double temperature;
