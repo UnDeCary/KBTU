@@ -28,9 +28,4 @@ public class DragonLunch {
 
         return true;
     }
-
-
-    public boolean willDragonEatOrNot(String arg) {
-
-    }
 }
