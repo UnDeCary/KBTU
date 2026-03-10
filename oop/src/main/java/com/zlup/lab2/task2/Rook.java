@@ -1,8 +1,8 @@
 package com.zlup.lab2.task2;
 
-public class Pawn extends Piece {
+public class Rook extends Piece {
 
-    public Pawn(Position a) {
+    public Rook(Position a) {
         super(a);
     }
 
@@ -10,6 +10,6 @@ public class Pawn extends Piece {
     public boolean isLegalMove(Position b) {
         if ((b.x > 8 || b.x < 1) || (b.y > 8 || b.y < 1)) return false;
 
-        return b.x == a.x && Math.abs(b.y - a.y) == 1;
+        return a.x == b.x || a.y == b.y;
     }
 }
