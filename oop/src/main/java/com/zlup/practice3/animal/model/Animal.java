@@ -10,7 +10,7 @@ public class Animal {
     }
 
     public void makeSound() {
-        System.out.println("Meow!");
+        System.out.println("Kva!");
     }
 
     public void eat() {
