@@ -10,5 +10,7 @@ public class CircuitTest {
         Circuit c2 = new Series(r3, r4);
         Circuit circuit = new Parallel(c1, c2);
         double R = circuit.getResistance();
+
+        System.out.println("R = " + R);
     }
 }

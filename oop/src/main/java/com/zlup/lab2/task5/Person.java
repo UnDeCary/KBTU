@@ -1,5 +1,7 @@
 package com.zlup.lab2.task5;
 
+import java.util.Objects;
+
 public abstract class Person {
     protected String name;
     protected int age;
@@ -56,14 +58,14 @@ public abstract class Person {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || !(o instanceof Person)) return false;
         Person p = (Person) o;
         return this.name == p.name;
     }
 
     @Override
     public int hashCode() {
-        return this.age;
+        return Objects.hash(this.age, this.name, this.pet);
     }
 
 

@@ -21,7 +21,7 @@ public class PhDStudent extends Student {
     }
 
     public String getOccupation() {
-        return "PhDStudent: " + name;
+        return "Research: " + research + "\nMajor: " + major;
     }
 
 }
