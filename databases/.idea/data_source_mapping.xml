@@ -2,6 +2,8 @@
 <project version="4">
   <component name="DataSourcePerFileMappings">
     <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/10f04a60-38a2-4784-b063-fe63dedff960/console.sql" value="8d47e3dd-07a3-43db-811e-130a4f7712c0" />
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/67543c2e-ceba-4f03-b337-5f99a2fff0d1/console.sql" value="67543c2e-ceba-4f03-b337-5f99a2fff0d1" />
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/70d9b8f5-c724-4411-80c0-d37f81fa717a/console.sql" value="70d9b8f5-c724-4411-80c0-d37f81fa717a" />
     <file url="file://$PROJECT_DIR$/../../Barni/db_shot/blocks.sql" value="67543c2e-ceba-4f03-b337-5f99a2fff0d1" />
     <file url="file://$PROJECT_DIR$/../../Barni/db_shot/global_blocks.sql" value="67543c2e-ceba-4f03-b337-5f99a2fff0d1" />
     <file url="file://$PROJECT_DIR$/../../Barni/db_shot/languages.sql" value="67543c2e-ceba-4f03-b337-5f99a2fff0d1" />

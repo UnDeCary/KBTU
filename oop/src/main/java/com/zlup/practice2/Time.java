@@ -1,6 +1,6 @@
 package com.zlup.practice2;
 
-public class Time {
+public class Time implements Comparable<Time> {
     int hour;
     int minute;
     int second;
@@ -62,6 +62,17 @@ public class Time {
         minute = (minute + time.minute) % 60;
         second = (second + time.second) % 60;
         return this;
+    }
+
+    @Override
+    public int compareTo(Time o) {
+        if (this.hour != o.hour) {
+            return Integer.compare(this.hour, o.hour);
+        }
+        if (this.minute != o.minute) {
+            return Integer.compare(this.minute, o.minute);
+        }
+        return Integer.compare(this.second, o.second);
     }
 
 }
