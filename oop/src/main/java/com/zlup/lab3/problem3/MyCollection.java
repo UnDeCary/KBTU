@@ -1,10 +1,10 @@
 package com.zlup.lab3.problem3;
 
-public interface MyCollection<E> {
-    void add(E element);
-    void remove(E element);
+public interface MyCollection<T> {
+    void add(T element);
+    void remove(T element);
     int size();
-    boolean contains(E element);
+    boolean contains(T element);
     boolean isEmpty();
     void clear();
 }

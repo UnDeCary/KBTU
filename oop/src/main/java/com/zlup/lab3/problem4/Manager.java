@@ -22,7 +22,7 @@ public class Manager extends Employee {
 
     @Override
     public String toString() {
-        return this.toString() + "\nBonus: " + this.bonus;
+        return super.toString() + "\nBonus: " + this.bonus;
     }
 
     @Override

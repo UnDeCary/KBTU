@@ -75,4 +75,9 @@ public class Time implements Comparable<Time> {
         return Integer.compare(this.second, o.second);
     }
 
+    @Override
+    public String toString() {
+        return String.format("%d:%02d:%s", hour, minute, second);
+    }
+
 }
